@@ -1,11 +1,16 @@
 package tj.com.safe_project.activity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.util.Log;
+import android.os.Handler;
+import android.os.Message;
 import android.widget.TextView;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,10 +21,36 @@ import java.net.URL;
 import tj.com.safe_project.R;
 import tj.com.safe_project.utils.StreamUtil;
 
+import static java.lang.System.currentTimeMillis;
+
 
 public class SplashActivity extends Activity {
     private TextView tv_version_name;
     private int mLocalVersionCode;
+
+    protected static final int UPDATE_VERSION = 100;
+    protected static final int ENTER_HOME = 101;
+    protected static final int URL_ERROR=102;
+    protected static final int IO_ERROR=103;
+    protected static final int JSON_ERROR=104;
+
+    private Handler mHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            switch (msg.what){
+                case UPDATE_VERSION:
+                    break;
+                case ENTER_HOME:
+                    enterHome();
+                    break;
+                case URL_ERROR:
+                    break;
+                case IO_ERROR:
+                    break;
+                case JSON_ERROR:
+                    break;
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,7 +58,6 @@ public class SplashActivity extends Activity {
 //        去除掉当前activity头titile
 //        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_splash);
-
 //        初始化 UI
         initUI();
 //        初始化数据
@@ -65,30 +95,62 @@ public class SplashActivity extends Activity {
     private void checkVersion() {
 //        发送请求
         new Thread(new Runnable() {
+            Message msg = Message.obtain();
+            long startTime= currentTimeMillis();
             @Override
             public void run() {
                 try {
 //                    http://192.168.43.111:8080/update.json测试阶段不是最优
 //                    以下地址仅限于电脑模拟器使用tomcat
-                   URL url= new URL("http://10.0.2.2:8080/update.json");
+                    URL url = new URL("http://10.0.2.2:8080/update.json");
 //                    开启链接
-                   HttpURLConnection connection =(HttpURLConnection) url.openConnection();
+                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 //                    这只常见请求头
                     connection.setConnectTimeout(2000);
                     connection.setReadTimeout(2000);
 //                    默认为GET请求
 //                    connection.setRequestMethod("POST");
 //                    获取成功响应码
-                     if(connection.getResponseCode()==200){
+                    if (connection.getResponseCode() == 200) {
 //                      以流的形式，获取数据,将流转化为字符串 ，封装工具类
-                         InputStream is=connection.getInputStream();
-                         String json=StreamUtil.streamToString(is);
-                         Log.i("SplashActivity",json);
-                     }
+                        InputStream is = connection.getInputStream();
+                        String json = StreamUtil.streamToString(is);
+//                         Log.i("SplashActivity",json);
+                        //json解析
+                        JSONObject jsonObject = new JSONObject(json);
+                        String versionName = jsonObject.getString("versionName");
+                        String versionDes = jsonObject.getString("versionDes");
+                        String versionCode = jsonObject.getString("versionCode");
+                        String downloadUrl = jsonObject.getString("downloadUrl");
+                        //比对版本号
+                        if (mLocalVersionCode < Integer.parseInt(versionCode)) {
+                            //提示用户更新，弹出对话框
+                            msg.what = UPDATE_VERSION;
+                        } else {
+//                             进入主界面
+                            msg.what = ENTER_HOME;
+                        }
+                    }
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
+                    msg.what=URL_ERROR;
                 } catch (IOException e) {
                     e.printStackTrace();
+                    msg.what=IO_ERROR;
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    msg.what=JSON_ERROR;
+                } finally {
+                    //指定睡眠时间，请求网络时间超过4秒不做处理，小于4秒，强制4秒
+                    long endTime=System.currentTimeMillis();
+                    if(endTime-startTime<4000){
+                        try {
+                            Thread.sleep(4000-(endTime-startTime));
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    mHandler.sendMessage(msg);
                 }
             }
         }).start();
@@ -128,5 +190,15 @@ public class SplashActivity extends Activity {
             e.printStackTrace();
         }
         return null;
+    }
+
+    /**
+     * 进入主界面
+     */
+    protected void enterHome(){
+        Intent intent=new Intent(SplashActivity.this,HomeActivity.class);
+        startActivity(intent);
+        //开启一个新界面后关闭导航页面（导航界面只见一次）
+        finish();
     }
 }
