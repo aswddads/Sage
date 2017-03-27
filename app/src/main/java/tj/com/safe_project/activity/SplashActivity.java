@@ -1,17 +1,28 @@
 package tj.com.safe_project.activity;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.widget.TextView;
+
+import com.lidroid.xutils.HttpUtils;
+import com.lidroid.xutils.exception.HttpException;
+import com.lidroid.xutils.http.ResponseInfo;
+import com.lidroid.xutils.http.callback.RequestCallBack;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -20,6 +31,7 @@ import java.net.URL;
 
 import tj.com.safe_project.R;
 import tj.com.safe_project.utils.StreamUtil;
+import tj.com.safe_project.utils.ToastUtil;
 
 import static java.lang.System.currentTimeMillis;
 
@@ -27,30 +39,42 @@ import static java.lang.System.currentTimeMillis;
 public class SplashActivity extends Activity {
     private TextView tv_version_name;
     private int mLocalVersionCode;
+    private String mVersionDes;
+    private String mDownloadUrl;
 
     protected static final int UPDATE_VERSION = 100;
     protected static final int ENTER_HOME = 101;
-    protected static final int URL_ERROR=102;
-    protected static final int IO_ERROR=103;
-    protected static final int JSON_ERROR=104;
+    protected static final int URL_ERROR = 102;
+    protected static final int IO_ERROR = 103;
+    protected static final int JSON_ERROR = 104;
 
     private Handler mHandler = new Handler() {
         public void handleMessage(Message msg) {
-            switch (msg.what){
+            switch (msg.what) {
                 case UPDATE_VERSION:
+//                    弹出对话框，提示用户更新
+                    showUpdateDialog();
                     break;
                 case ENTER_HOME:
                     enterHome();
                     break;
                 case URL_ERROR:
+//                    Toast.makeText(SplashActivity.this,"",Toast.LENGTH_SHORT).show();
+                    ToastUtil.show(SplashActivity.this, "URL 异常");
+                    enterHome();
                     break;
                 case IO_ERROR:
+                    ToastUtil.show(SplashActivity.this, "读取异常");
+                    enterHome();
                     break;
                 case JSON_ERROR:
+                    ToastUtil.show(getApplicationContext(), "程序解析异常");
+                    enterHome();
                     break;
             }
         }
     };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,7 +120,8 @@ public class SplashActivity extends Activity {
 //        发送请求
         new Thread(new Runnable() {
             Message msg = Message.obtain();
-            long startTime= currentTimeMillis();
+            long startTime = currentTimeMillis();
+
             @Override
             public void run() {
                 try {
@@ -119,9 +144,9 @@ public class SplashActivity extends Activity {
                         //json解析
                         JSONObject jsonObject = new JSONObject(json);
                         String versionName = jsonObject.getString("versionName");
-                        String versionDes = jsonObject.getString("versionDes");
+                        mVersionDes = jsonObject.getString("versionDes");
                         String versionCode = jsonObject.getString("versionCode");
-                        String downloadUrl = jsonObject.getString("downloadUrl");
+                        mDownloadUrl = jsonObject.getString("downloadUrl");
                         //比对版本号
                         if (mLocalVersionCode < Integer.parseInt(versionCode)) {
                             //提示用户更新，弹出对话框
@@ -133,19 +158,19 @@ public class SplashActivity extends Activity {
                     }
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
-                    msg.what=URL_ERROR;
+                    msg.what = URL_ERROR;
                 } catch (IOException e) {
                     e.printStackTrace();
-                    msg.what=IO_ERROR;
+                    msg.what = IO_ERROR;
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    msg.what=JSON_ERROR;
+                    msg.what = JSON_ERROR;
                 } finally {
                     //指定睡眠时间，请求网络时间超过4秒不做处理，小于4秒，强制4秒
-                    long endTime=System.currentTimeMillis();
-                    if(endTime-startTime<4000){
+                    long endTime = System.currentTimeMillis();
+                    if (endTime - startTime < 4000) {
                         try {
-                            Thread.sleep(4000-(endTime-startTime));
+                            Thread.sleep(4000 - (endTime - startTime));
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -195,10 +220,118 @@ public class SplashActivity extends Activity {
     /**
      * 进入主界面
      */
-    protected void enterHome(){
-        Intent intent=new Intent(SplashActivity.this,HomeActivity.class);
+    protected void enterHome() {
+        Intent intent = new Intent(SplashActivity.this, HomeActivity.class);
         startActivity(intent);
         //开启一个新界面后关闭导航页面（导航界面只见一次）
         finish();
+    }
+
+    /**
+     * 弹出对话框，提示用户更新
+     */
+    protected void showUpdateDialog() {
+//        对话框依赖于activity而存在
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//        对话框左上角图标
+        builder.setIcon(R.drawable.ic_launcher);
+        builder.setTitle("版本更新");
+//        设置描述内容
+        builder.setMessage(mVersionDes);
+        builder.setPositiveButton("立即更新", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+//                下载apk
+                downloadAPK();
+
+            }
+        });
+        builder.setNegativeButton("以后再说", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                enterHome();
+            }
+//            取消对话框，进入主界面
+        });
+        builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialogInterface) {
+                enterHome();
+
+                dialogInterface.dismiss();
+            }
+        });
+        builder.show();
+    }
+
+    /**
+     * 更新下载,放置apk位置
+     */
+    private void downloadAPK() {
+//        判断sdk是否可用
+        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+//            获取sdk路径
+            String path = Environment.getExternalStorageDirectory().getAbsolutePath()
+                    + File.separator + "mobilesafe.apk";
+//            发送请求，获取apk，并放置到指定路径  发送请求，传递参数（下载地址，下载后放置的位置，）
+            HttpUtils httpUtils = new HttpUtils();
+            httpUtils.download(mDownloadUrl, path, new RequestCallBack<File>() {
+                @Override
+                public void onSuccess(ResponseInfo<File> responseInfo) {
+                    //下载成功的apk
+                    File file = responseInfo.result;
+//                    提示用户下载
+                    installAPK(file);
+                }
+
+                @Override
+                public void onFailure(HttpException e, String s) {
+                    e.printStackTrace();
+                }
+
+                //                刚刚开始下载的方法
+                @Override
+                public void onStart() {
+                    super.onStart();
+                }
+
+                //              下载过程中的方法（下载apk的总大小，当前的下载为中，会否正在下载）
+                @Override
+                public void onLoading(long total, long current, boolean isUploading) {
+                    super.onLoading(total, current, isUploading);
+                    Log.i("M", "下载中...");
+                }
+            });
+        }
+    }
+
+    /**
+     * 安装对应apk
+     *
+     * @param file
+     */
+    private void installAPK(File file) {
+//        系统界面,源码,安装入口
+        Intent intent = new Intent("android.intent.action.VIEW");
+        intent.addCategory("android.intent.category.DEFAULT");
+//        文件作为数据源
+        intent.setData(Uri.fromFile(file));
+//        设置安装的类型
+        intent.setType("application/vnd.android.package-rchive");
+        startActivityForResult(intent, 0);
+    }
+
+    /**
+     * 开启一个activity,返回结果调用的方法
+     *
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        enterHome();
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }
