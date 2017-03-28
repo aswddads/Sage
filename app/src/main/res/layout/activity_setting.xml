@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        style="@style/TitleStyle"
+        android:text="设置中心" />
+    <!--将以下相对布局，抽取到单独的一个类中管理，以后只需要添加类，就有以下效果
+       自定义组合控件-->
+    <!--<RelativeLayout-->
+    <!--android:padding="5dp"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content">-->
+    <!--<TextView-->
+    <!--android:id="@+id/tv_title"-->
+    <!--android:textColor="@color/color_black"-->
+    <!--android:textSize="18sp"-->
+    <!--android:text="自动更新设置"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content" />-->
+    <!--<TextView-->
+    <!--android:id="@+id/tv_des"-->
+    <!--android:textColor="@color/color_black"-->
+    <!--android:textSize="18sp"-->
+    <!--android:text="自动更新已关闭"-->
+    <!--android:layout_below="@id/tv_title"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content" />-->
+    <!--<CheckBox-->
+    <!--android:layout_centerVertical="true"-->
+    <!--android:layout_alignParentRight="true"-->
+    <!--android:id="@+id/cb_box"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content" />-->
+    <!--<View-->
+    <!--android:layout_below="@id/tv_des"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="1dp"-->
+    <!--android:background="@color/color_black">-->
+    <!--</View>-->
+    <!--</RelativeLayout>-->
+    <tj.com.safe_project.view.SettingitemView
+        xmlns:mobilesafe="http://schemas.android.com/apk/res/tj.com.safe_project"
+        android:id="@+id/siv_update"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        mobilesafe:destitle="自动更新设置"
+        mobilesafe:desoff="自动更新已关闭"
+        mobilesafe:deson="自动更新已开启">
+
+    </tj.com.safe_project.view.SettingitemView>
+    <tj.com.safe_project.view.SettingitemView
+        xmlns:mobilesafe="http://schemas.android.com/apk/res/tj.com.safe_project"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        mobilesafe:destitle="电话归属地显示设置"
+        mobilesafe:desoff="电话归属地设置已开启"
+        mobilesafe:deson="电话归属地设置已关闭">
+
+    </tj.com.safe_project.view.SettingitemView>
+    <!--settingitemview需要在构建布局的时候指定title和des的字符串描述内容-->
+    <!--自定义属性-->
+
+</LinearLayout>

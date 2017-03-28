@@ -12,6 +12,8 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.animation.AlphaAnimation;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.lidroid.xutils.HttpUtils;
@@ -30,6 +32,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import tj.com.safe_project.R;
+import tj.com.safe_project.utils.ConstanValue;
+import tj.com.safe_project.utils.SpUtils;
 import tj.com.safe_project.utils.StreamUtil;
 import tj.com.safe_project.utils.ToastUtil;
 
@@ -41,6 +45,7 @@ public class SplashActivity extends Activity {
     private int mLocalVersionCode;
     private String mVersionDes;
     private String mDownloadUrl;
+    private RelativeLayout mRl_root;
 
     protected static final int UPDATE_VERSION = 100;
     protected static final int ENTER_HOME = 101;
@@ -86,6 +91,14 @@ public class SplashActivity extends Activity {
         initUI();
 //        初始化数据
         initDate();
+//        初始化动画
+        initAnimation();
+    }
+//添加淡入淡出动画效果
+    private void initAnimation() {
+        AlphaAnimation alphAnimation=new AlphaAnimation(0,1);
+        alphAnimation.setDuration(3000);
+        mRl_root.startAnimation(alphAnimation);
     }
 
     /**
@@ -93,6 +106,7 @@ public class SplashActivity extends Activity {
      */
     private void initUI() {
         tv_version_name = (TextView) findViewById(R.id.tv_version_name);
+        mRl_root=(RelativeLayout)findViewById(R.id.rl_root);
     }
 
     /**
@@ -105,12 +119,21 @@ public class SplashActivity extends Activity {
         mLocalVersionCode = getVersionCode();
 //        3.获取服务器版本号(客服端发请求，服务端响应)（json，xml）
 //       http://www.xxoo.com/update.json?key=value  返回200请求成功，流的方式读取
+
+
 /**
  * json中内容包含：
  *   更新版本号名称、信息、服务器版本号、新版本下载地址
  */
 
-        checkVersion();
+        if(SpUtils.getBoolean(getApplicationContext(), ConstanValue.OPEN_UPDATE,false)){
+            checkVersion();
+        }else {
+//            直接进入主界面  消息机制
+//            mHandler.sendMessageDelayed(,4000);  4秒后进入enter_home状态码指定的消息
+            mHandler.sendEmptyMessageDelayed(ENTER_HOME,4000);
+        }
+
     }
 
     /**

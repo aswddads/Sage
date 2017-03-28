@@ -2,12 +2,46 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/color_white">
-
+    android:background="@color/color_white"
+    android:orientation="vertical">
+    <!-- 将对应属性抽取到样式中-->
     <TextView
-        android:text="home_activity"
-        android:textSize="15sp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        style="@style/TitleStyle"
+        android:text="功能列表" />
+    <!--ellipsize 添加省略点的位置-->
+    <!--跑马灯的效果ellipsize="marquee"-->
+    <!--自定义空间达到滚动效果（重写TexyView ,让其一直获得焦点）-->
+    <!--
+    <TextView
+
+        android:text="秋天圣诞节繁花似锦方式洛克菲勒说德桑克蒂斯肯定是附近饭店附近的分开来说可乐豆腐豆腐豆腐块到了"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#000"
+        android:singleLine="true"
+        android:padding="5dp"
+        android:ellipsize="marquee"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:marqueeRepeatLimit="marquee_forever"/>-->
+    <tj.com.safe_project.view.FocusTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ellipsize="marquee"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:padding="5dp"
+        android:singleLine="true"
+        android:text="秋天圣诞节繁花似锦方式洛克菲勒说德桑克蒂斯肯定是附近饭店附近的分开来说可乐豆腐豆腐豆腐块到了"
+        android:textColor="#000" />
+<!--numColumns 指定列数-->
+    <!--        android:verticalSpacing="10dp"   指定内部竖直方向间距为10dp-->
+    <GridView
+        android:numColumns="3"
+        android:verticalSpacing="10dp"
+        android:id="@+id/gv_home"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </GridView>
 
 </LinearLayout>
