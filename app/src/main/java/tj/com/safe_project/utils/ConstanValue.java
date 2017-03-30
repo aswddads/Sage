@@ -9,4 +9,8 @@ public class ConstanValue {
     public static final String OPEN_UPDATE="open_update";
 //    是否设置有密码
     public static final String MOBILE_SAFE_PASSWORD = "mobile_safe_password";
+//    是否完成导航界面的设置
+    public static final String SETUP_OVER = "setup_over";
+//    sim卡绑定序列号的key
+    public static final String SIM_NUMBER = "sim_number";
 }

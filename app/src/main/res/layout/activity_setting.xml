@@ -56,8 +56,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         mobilesafe:destitle="电话归属地显示设置"
-        mobilesafe:desoff="电话归属地设置已开启"
-        mobilesafe:deson="电话归属地设置已关闭">
+        mobilesafe:desoff="电话归属地设置已关闭"
+        mobilesafe:deson="电话归属地设置已开启">
 
     </tj.com.safe_project.view.SettingitemView>
     <!--settingitemview需要在构建布局的时候指定title和des的字符串描述内容-->

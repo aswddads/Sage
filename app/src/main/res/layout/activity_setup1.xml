@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <TextView
+        style="@style/TitleStyle"
+        android:text="1 欢迎使用手机防盗" />
+    <TextView
+        android:layout_margin="5dp"
+        android:textSize="18sp"
+        android:textColor="@color/color_black"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="您的手机防盗卫士:"/>
+    <TextView
+        android:drawableLeft="@android:drawable/star_big_on"
+        android:textSize="18sp"
+        android:textColor="@color/color_black"
+        android:gravity="center_vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sim变更报警"/>
+    <TextView
+        android:drawableLeft="@android:drawable/star_big_on"
+        android:gravity="center_vertical"
+        android:textSize="18sp"
+        android:textColor="@color/color_black"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="GPS的追踪"/>
+    <TextView
+        android:drawableLeft="@android:drawable/star_big_on"
+        android:gravity="center_vertical"
+        android:textSize="18sp"
+        android:textColor="@color/color_black"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="远程数据销毁"/>
+    <TextView
+        android:drawableLeft="@android:drawable/star_big_on"
+        android:gravity="center_vertical"
+        android:textSize="18sp"
+        android:textColor="@color/color_black"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="远程锁屏"/>
+    <!--让内部控件水平居中-->
+    <LinearLayout
+        android:gravity="center_horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:background="@android:drawable/presence_online"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <ImageView
+            android:background="@android:drawable/presence_invisible"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <ImageView
+            android:background="@android:drawable/presence_invisible"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <ImageView
+            android:background="@android:drawable/presence_invisible"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <ImageView
+            android:layout_centerInParent="true"
+            android:background="@drawable/setup1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <!--图片选择器-->
+        <!--抽取共同样式到styles-->
+        <Button
+            style="@style/nextBtn" />
+    </RelativeLayout>
+
+</LinearLayout>

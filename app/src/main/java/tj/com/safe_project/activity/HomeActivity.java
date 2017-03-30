@@ -95,7 +95,9 @@ public class HomeActivity extends Activity {
         final AlertDialog dialog = builder.create();
         final View view = View.inflate(this, R.layout.dialog_confirm_psd, null);
 //        让对话框显示一个自定义的对话框
-        dialog.setView(view);
+//        兼容低版本四个角默认的黑色边距
+        dialog.setView(view,0,0,0,0);
+//        dialog.setView(view);
         dialog.show();
 
         Button bt_submit = (Button) view.findViewById(R.id.bt_submit);
@@ -109,7 +111,7 @@ public class HomeActivity extends Activity {
 //                    进入手机界面    将输入的密码进行md5操作然后与存储的密码进行比对
                     String psd = SpUtils.getString(getApplicationContext(), ConstanValue.MOBILE_SAFE_PASSWORD, "");
                     if (psd.equals(MD5Utils.encoder(confirm_psd))) {
-                        Intent intent = new Intent(getApplicationContext(), TestActivity.class);
+                        Intent intent = new Intent(getApplicationContext(), SetupOverActivity.class);
                         startActivity(intent);
                         dialog.dismiss();
                     } else {
@@ -140,7 +142,8 @@ public class HomeActivity extends Activity {
         final AlertDialog dialog = builder.create();
         final View view = View.inflate(this, R.layout.dialog_set_psd, null);
 //        让对话框显示一个自定义的对话框
-        dialog.setView(view);
+//        dialog.setView(view);
+        dialog.setView(view,0,0,0,0);
         dialog.show();
 
         Button bt_submit = (Button) view.findViewById(R.id.bt_submit);
@@ -155,7 +158,7 @@ public class HomeActivity extends Activity {
                 if (!TextUtils.isEmpty(psd) && !TextUtils.isEmpty(confirm_psd)) {
 //                    进入手机界面
                     if (psd.equals(confirm_psd)) {
-                        Intent intent = new Intent(getApplicationContext(), TestActivity.class);
+                        Intent intent = new Intent(getApplicationContext(), SetupOverActivity.class);
                         startActivity(intent);
                         dialog.dismiss();
                         SpUtils.putString(getApplicationContext(), ConstanValue.MOBILE_SAFE_PASSWORD, MD5Utils.encoder(psd));

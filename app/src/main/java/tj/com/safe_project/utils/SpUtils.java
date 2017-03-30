@@ -43,4 +43,16 @@ public class SpUtils {
         }
         return sp.getString(key,defvalue);//返回默认值或者读取到的值
     }
+
+    /**
+     *
+     * @param context 上下文环境
+     * @param key   移除节点的名称
+     */
+    public static void remove(Context context, String key) {
+        if (sp == null) {
+            sp = context.getSharedPreferences("config", Context.MODE_PRIVATE);
+        }
+        sp.edit().remove(key).commit();
+    }
 }
