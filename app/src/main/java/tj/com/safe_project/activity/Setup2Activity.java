@@ -11,6 +11,7 @@ import android.view.View;
 import tj.com.safe_project.R;
 import tj.com.safe_project.utils.ConstanValue;
 import tj.com.safe_project.utils.SpUtils;
+import tj.com.safe_project.utils.ToastUtil;
 import tj.com.safe_project.view.SettingitemView;
 
 /**
@@ -61,8 +62,14 @@ public class Setup2Activity extends Activity{
         finish();
     }
     public void nextPage(View view){
-        Intent intent=new Intent(getApplicationContext(),Setup3Activity.class);
-        startActivity(intent);
-        finish();
+        String serialNum= SpUtils.getString(this,ConstanValue.SIM_NUMBER,"");
+        if(!TextUtils.isEmpty(serialNum)){
+            Intent intent=new Intent(getApplicationContext(),Setup3Activity.class);
+            startActivity(intent);
+            finish();
+        }else {
+            ToastUtil.show(this,"请绑定sim卡");
+        }
+
     }
 }
