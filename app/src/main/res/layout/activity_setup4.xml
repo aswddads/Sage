@@ -6,6 +6,7 @@
         style="@style/TitleStyle"
         android:text="4 设置完成"/>
     <CheckBox
+        android:textSize="18sp"
         android:text="未开启防盗功能 "
         android:id="@+id/cb_bo"
         android:layout_width="wrap_content"
