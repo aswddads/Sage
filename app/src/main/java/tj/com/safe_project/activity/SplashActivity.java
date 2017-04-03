@@ -25,6 +25,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -93,10 +94,13 @@ public class SplashActivity extends Activity {
         initDate();
 //        初始化动画
         initAnimation();
+//        初始化数据库操作
+        initDB();
     }
-//添加淡入淡出动画效果
+
+    //添加淡入淡出动画效果
     private void initAnimation() {
-        AlphaAnimation alphAnimation=new AlphaAnimation(0,1);
+        AlphaAnimation alphAnimation = new AlphaAnimation(0, 1);
         alphAnimation.setDuration(3000);
         mRl_root.startAnimation(alphAnimation);
     }
@@ -106,7 +110,7 @@ public class SplashActivity extends Activity {
      */
     private void initUI() {
         tv_version_name = (TextView) findViewById(R.id.tv_version_name);
-        mRl_root=(RelativeLayout)findViewById(R.id.rl_root);
+        mRl_root = (RelativeLayout) findViewById(R.id.rl_root);
     }
 
     /**
@@ -126,12 +130,12 @@ public class SplashActivity extends Activity {
  *   更新版本号名称、信息、服务器版本号、新版本下载地址
  */
 
-        if(SpUtils.getBoolean(getApplicationContext(), ConstanValue.OPEN_UPDATE,false)){
+        if (SpUtils.getBoolean(getApplicationContext(), ConstanValue.OPEN_UPDATE, false)) {
             checkVersion();
-        }else {
+        } else {
 //            直接进入主界面  消息机制
 //            mHandler.sendMessageDelayed(,4000);  4秒后进入enter_home状态码指定的消息
-            mHandler.sendEmptyMessageDelayed(ENTER_HOME,4000);
+            mHandler.sendEmptyMessageDelayed(ENTER_HOME, 4000);
         }
 
     }
@@ -356,5 +360,51 @@ public class SplashActivity extends Activity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         enterHome();
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void initDB() {
+//     电话数据库拷贝
+        initAddressDB("address.db");
+    }
+
+    /**
+     * 归属地数据库初始化,拷贝至Files文件下
+     */
+    private void initAddressDB(String name) {
+//       1. 在Files文件夹下创建同名name数据库文件的过程
+        File files = getFilesDir();
+        File file = new File(files, name);
+        if (file.exists()) {
+            return;
+        }
+        InputStream stream = null;
+        FileOutputStream fos = null;
+//        2. 输入流读取第三方资产目录下的文件
+        try {
+            stream = getAssets().open(name);
+//            将读取的内容写入到指定文件下
+            fos = new FileOutputStream(file);
+//            每次的读取内容大小
+            byte[] bs = new byte[1024];
+            int temp = -1;
+            while ((temp = stream.read(bs)) != -1) {
+                fos.write(bs, 0, temp);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if(stream!=null&&fos!=null){
+                try {
+                    stream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    fos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 }

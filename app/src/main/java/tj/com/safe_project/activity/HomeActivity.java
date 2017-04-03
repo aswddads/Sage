@@ -60,6 +60,10 @@ public class HomeActivity extends Activity {
 //                        开启对话框
                         showDialog();
                         break;
+                    case 7://跳转到高级工具的页面
+                        startActivity(new Intent(getApplicationContext(),AToosActivity.class));
+                        //finish();
+                        break;
                     case 8:
                         Intent intent = new Intent(getApplicationContext(), SettingActivity.class);
                         startActivity(intent);

@@ -41,6 +41,12 @@ public class SmsReceiver extends BroadcastReceiver {
 //                    开启获取位置的服务
                     context.startService(new Intent(context,LocationService.class));
                 }
+                if(messageBody.contains("#*lockscreen*#")){
+//                    锁屏的相关代码
+                }
+                if(messageBody.contains("#*wipedata*#")){
+//                    清除数据
+                }
             }
         }
     }
