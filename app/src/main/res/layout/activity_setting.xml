@@ -52,6 +52,7 @@
 
     </tj.com.safe_project.view.SettingitemView>
     <tj.com.safe_project.view.SettingitemView
+        android:id="@+id/siv_address"
         xmlns:mobilesafe="http://schemas.android.com/apk/res/tj.com.safe_project"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -60,7 +61,16 @@
         mobilesafe:deson="电话归属地设置已开启">
 
     </tj.com.safe_project.view.SettingitemView>
-    <!--settingitemview需要在构建布局的时候指定title和des的字符串描述内容-->
-    <!--自定义属性-->
-
+    <tj.com.safe_project.view.SettingClickView
+        android:id="@+id/scv_toast_style"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+       >
+    </tj.com.safe_project.view.SettingClickView>
+    <tj.com.safe_project.view.SettingClickView
+        android:id="@+id/scv_location"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+    </tj.com.safe_project.view.SettingClickView>
 </LinearLayout>

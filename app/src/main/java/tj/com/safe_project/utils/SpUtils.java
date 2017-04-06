@@ -55,4 +55,17 @@ public class SpUtils {
         }
         sp.edit().remove(key).commit();
     }
+
+    public static int getInt(Context context,String key,int value) {
+        if(sp==null){
+            sp=context.getSharedPreferences("config",Context.MODE_PRIVATE);
+        }
+       return sp.getInt(key,value);
+    }
+    public static void putInt(Context context,String key,int value) {
+        if(sp==null){
+            sp=context.getSharedPreferences("config",Context.MODE_PRIVATE);
+        }
+        sp.edit().putInt(key,value).commit();
+    }
 }

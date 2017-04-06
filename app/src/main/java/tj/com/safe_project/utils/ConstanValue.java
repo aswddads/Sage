@@ -19,4 +19,16 @@ public class ConstanValue {
      * 是否开启防盗key，总开关
      */
     public static final String OPEN_SECURITY = "open_security";
+    /**
+     * 土司选择样式索引所在的key
+     */
+    public static final String TOAST_STYLE = "toast_style";
+    /**
+     * 左上角的x轴坐标的key
+     */
+    public static final String LOCATION_X = "location_x";
+    /**
+     * 左上角的y轴坐标的key
+     */
+    public static final String LOCATION_Y = "location_y";
 }

@@ -1,9 +1,11 @@
 package tj.com.safe_project.activity;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.Vibrator;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -59,7 +61,6 @@ public class QueryAddressActivity extends Activity{
 //                    抖动输入框
                     Animation shake= AnimationUtils.loadAnimation(getApplicationContext(),R.anim.shake);
                     mEt_phone.startAnimation(shake);
-
                     /**
                      * interpolator插补器，数学函数  ,自定义插补器
                      */
@@ -72,6 +73,12 @@ public class QueryAddressActivity extends Activity{
 //                    });
 ////                    Interpolator
 ////                    CycleInterpolator
+                    /**
+                     * 手机震动效果(vibrator)
+                     */
+                    Vibrator vibrator= (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+                    vibrator.vibrate(1000);//震动时间
+                    vibrator.vibrate(new long[]{500,1000,500,1000},-1);//规律震动（震动规则(不震动时间，震动时间)，重复次数）
                 }
             }
         });
