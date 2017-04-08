@@ -1,8 +1,10 @@
 package tj.com.safe_project.service;
 
 import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.PixelFormat;
 import android.os.Handler;
 import android.os.IBinder;
@@ -41,6 +43,7 @@ public class AddressService extends Service {
     private int[] mDrawableIds;
     private int mScreenHeight;
     private int mScreenWidth;
+    private InnerOutCallReceiver mInnerOutCallReceiver;
 
     @Override
     public void onCreate() {
@@ -53,7 +56,24 @@ public class AddressService extends Service {
         mWM = (WindowManager) getSystemService(WINDOW_SERVICE);
         mScreenHeight=mWM.getDefaultDisplay().getHeight();
         mScreenWidth=mWM.getDefaultDisplay().getWidth();
+
+//        监听拨出电话的广播接收者  过滤条件
+        IntentFilter intentFilter=new IntentFilter();
+        intentFilter.addAction(Intent.ACTION_NEW_OUTGOING_CALL);
+//        创建广播接收者（需要权限）
+        mInnerOutCallReceiver = new InnerOutCallReceiver();
+//        注册
+        registerReceiver(mInnerOutCallReceiver,intentFilter);
         super.onCreate();
+    }
+    private class InnerOutCallReceiver extends BroadcastReceiver{
+        @Override
+        public void onReceive(Context context, Intent intent) {
+//      接收到此广播后，需要显示自定义的土司，显示播出归属地号码
+//           获取播出号码的api
+            String phone=getResultData();
+            showToast(phone);
+        }
     }
 
     class MyPhoneStateListener extends PhoneStateListener {
@@ -186,6 +206,10 @@ public class AddressService extends Service {
         if (mTM != null && mPhoneStateListener != null) {
             mTM.listen(mPhoneStateListener, PhoneStateListener.LISTEN_NONE);
         }
+        if(mInnerOutCallReceiver!=null){
+//            注销
+            unregisterReceiver(mInnerOutCallReceiver);
+        }
         super.onDestroy();
     }
 
@@ -194,4 +218,6 @@ public class AddressService extends Service {
     public IBinder onBind(Intent intent) {
         return null;
     }
+
+
 }

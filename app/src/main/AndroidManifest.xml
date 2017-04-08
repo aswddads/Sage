@@ -13,6 +13,8 @@
     <uses-permission android:name="android.permission.VIBRATE"/>
     <!--窗体上挂载view的权限-->
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+    <!--去电广播监听的权限-->
+    <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS"/>
 
     <application
         android:allowBackup="true"
@@ -42,6 +44,10 @@
         <!--透明没有标题的主题属性-->
         <activity android:name=".activity.ToastLocationActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
+        <activity android:name=".activity.BlackNumberActivity"/>
+
+
+
 
         <receiver android:name=".receiver.BootReceiver">
             <intent-filter>
@@ -57,6 +63,8 @@
 
         <service android:name=".service.LocationService"/>
         <service android:name=".service.AddressService"/>
+        <service android:name=".service.RocketService"/>
+        <service android:name=".service.BlackNumberService"/>
     </application>
 
 </manifest>

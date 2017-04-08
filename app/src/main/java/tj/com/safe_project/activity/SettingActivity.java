@@ -9,11 +9,15 @@ import android.view.View;
 
 import tj.com.safe_project.R;
 import tj.com.safe_project.service.AddressService;
+import tj.com.safe_project.service.BlackNumberService;
+import tj.com.safe_project.service.RocketService;
 import tj.com.safe_project.utils.ConstanValue;
 import tj.com.safe_project.utils.ServiceUtil;
 import tj.com.safe_project.utils.SpUtils;
 import tj.com.safe_project.view.SettingClickView;
 import tj.com.safe_project.view.SettingitemView;
+
+import static tj.com.safe_project.R.id.scv_rocket;
 
 /**
  * Created by Jun on 17/3/28.
@@ -24,6 +28,8 @@ public class SettingActivity extends Activity {
     private String[] mToastStyleDes;
     private int mToast_style;
     private SettingClickView scv_toast_style;
+    private String mOpenRocket;
+    private SettingClickView mScvRocket;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,19 +39,95 @@ public class SettingActivity extends Activity {
         initAddress();
         initToastStyle();
         initLocation();
+        initRocket();
+        initBlacknumber();
     }
+
+    /**
+     * 拦截黑名单短信、电话
+     */
+    private void initBlacknumber() {
+        final SettingitemView siv_blacknumber = (SettingitemView) findViewById(R.id.siv_blacknumber);
+        boolean isRunning = ServiceUtil.isRunning(this, "tj.com.safe_project.service.BlackNumberService");
+        siv_blacknumber.setCheck(isRunning);
+        siv_blacknumber.setOnClickListener(new View.OnClickListener()  {
+            @Override
+            public void onClick(View view) {
+                boolean isCheck = siv_blacknumber.isCheck();
+                siv_blacknumber.setCheck(!isCheck);
+                if (!isCheck) {
+                    //开启服务
+                    startService(new Intent(getApplicationContext(), BlackNumberService.class));
+                } else {
+//                  关闭服务
+                    stopService(new Intent(getApplicationContext(), BlackNumberService.class));
+                }
+            }
+        });
+    }
+
+    private void initRocket() {
+        mScvRocket = (SettingClickView) findViewById(scv_rocket);
+        mScvRocket.setTitle("小火箭状态");
+        mOpenRocket = SpUtils.getString(this, ConstanValue.OPEN_ROCKET, null);
+        if (mOpenRocket == "开启") {
+            mScvRocket.setDes("已开启");
+        } else {
+            mScvRocket.setDes("已关闭");
+        }
+        mScvRocket.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showRocketStyleDialog();
+            }
+        });
+    }
+
+    private void showRocketStyleDialog() {
+        AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
+        builder1.setIcon(R.drawable.ic_launcher);
+        builder1.setTitle("设置小火箭显示状态");
+        //选择单个条目事件监听（string类型的数组（描述颜色的数组），弹出对画框选中条目索引值，点击某一个条目触发的点击事件）
+        /**
+         * 本处可以使用setSingleItems设置单选，但是我测试时发现不能正常显示被选状态  有待改进
+         */
+        builder1.setPositiveButton("开启", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                SpUtils.putString(getApplicationContext(), ConstanValue.OPEN_ROCKET, "开启");
+                mScvRocket.setDes("已开启");
+                //开启火箭的服务
+                startService(new Intent(getApplicationContext(), RocketService.class));
+                dialogInterface.dismiss();
+            }
+        });
+//        消极按钮
+        builder1.setNegativeButton("关闭", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                SpUtils.putString(getApplicationContext(), ConstanValue.OPEN_ROCKET, "关闭");
+                mScvRocket.setDes("已关闭");
+//                关闭
+                stopService(new Intent(getApplicationContext(), RocketService.class));
+                dialogInterface.dismiss();
+            }
+        });
+        builder1.show();
+
+    }
+
 
     /**
      * 双击居中view所在屏幕位置的处理方法
      */
     private void initLocation() {
-        SettingClickView scv_location= (SettingClickView) findViewById(R.id.scv_location);
+        SettingClickView scv_location = (SettingClickView) findViewById(R.id.scv_location);
         scv_location.setTitle("归属地提示位置");
         scv_location.setDes("设置归属地提示位置");
         scv_location.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(getApplicationContext(),ToastLocationActivity.class));
+                startActivity(new Intent(getApplicationContext(), ToastLocationActivity.class));
             }
         });
     }
@@ -54,9 +136,9 @@ public class SettingActivity extends Activity {
         scv_toast_style = (SettingClickView) findViewById(R.id.scv_toast_style);
         scv_toast_style.setTitle("电话归属地显示风格");
 //       1. 创建描述文字所在的string类型数组
-        mToastStyleDes = new String[]{"透明","橙色","蓝色","灰色","绿色"};
+        mToastStyleDes = new String[]{"透明", "橙色", "蓝色", "灰色", "绿色"};
 //        2.sp获取toast样式的索引值（int），用于描述文字
-        mToast_style = SpUtils.getInt(this, ConstanValue.TOAST_STYLE,0);
+        mToast_style = SpUtils.getInt(this, ConstanValue.TOAST_STYLE, 0);
 //        获取字符串数组中文字显示在tv_des
         scv_toast_style.setDes(mToastStyleDes[mToast_style]);
 //        监听点击事件，弹出对话框
@@ -71,8 +153,8 @@ public class SettingActivity extends Activity {
     /**
      * 创建选中样式的对话框
      */
-    protected void showToastStyleDialog(){
-        AlertDialog.Builder builder=new AlertDialog.Builder(this);
+    protected void showToastStyleDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setIcon(R.drawable.ic_launcher);
         builder.setTitle("选择归属地样式");
         //选择单个条目事件监听（string类型的数组（描述颜色的数组），弹出对画框选中条目索引值，点击某一个条目触发的点击事件）
@@ -83,7 +165,7 @@ public class SettingActivity extends Activity {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {//i  选中的索引值
                 //        点击事件：1.记录选中的索引值  2，关闭对话框   3，显示选中的色值文字
-                SpUtils.putInt(getApplicationContext(),ConstanValue.TOAST_STYLE,i);
+                SpUtils.putInt(getApplicationContext(), ConstanValue.TOAST_STYLE, i);
                 dialogInterface.dismiss();
                 scv_toast_style.setDes(mToastStyleDes[i]);
             }
@@ -104,7 +186,7 @@ public class SettingActivity extends Activity {
     private void initAddress() {
         siv_address = (SettingitemView) findViewById(R.id.siv_address);
 //        对是否开启状态进行显示
-        boolean isRunning=ServiceUtil.isRunning(this,"tj.com.safe_project.service.AddressService");
+        boolean isRunning = ServiceUtil.isRunning(this, "tj.com.safe_project.service.AddressService");
         siv_address.setCheck(isRunning);
 //        点击过程中，状态的切换
         siv_address.setOnClickListener(new View.OnClickListener() {
@@ -114,10 +196,10 @@ public class SettingActivity extends Activity {
                 siv_address.setCheck(!isCheck);
                 if (!isCheck) {
 //                    开启服务管理土司
-                    startService(new Intent(getApplicationContext(),AddressService.class));
-                }else{
+                    startService(new Intent(getApplicationContext(), AddressService.class));
+                } else {
 //                    关闭服务，不需要显示土司
-                    stopService(new Intent(getApplicationContext(),AddressService.class));
+                    stopService(new Intent(getApplicationContext(), AddressService.class));
                 }
             }
         });

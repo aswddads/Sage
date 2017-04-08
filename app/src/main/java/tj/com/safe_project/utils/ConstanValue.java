@@ -31,4 +31,8 @@ public class ConstanValue {
      * 左上角的y轴坐标的key
      */
     public static final String LOCATION_Y = "location_y";
+    /**
+     * 是否开启小火箭的key
+     */
+    public static final String OPEN_ROCKET = "open_rocket";
 }

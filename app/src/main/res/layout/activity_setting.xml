@@ -73,4 +73,20 @@
         android:layout_height="wrap_content"
         >
     </tj.com.safe_project.view.SettingClickView>
+    <tj.com.safe_project.view.SettingClickView
+        android:id="@+id/scv_rocket"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+    </tj.com.safe_project.view.SettingClickView>
+    <tj.com.safe_project.view.SettingitemView
+        android:id="@+id/siv_blacknumber"
+        xmlns:mobilesafe="http://schemas.android.com/apk/res/tj.com.safe_project"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        mobilesafe:destitle="黑名单拦截设置"
+        mobilesafe:desoff="黑名单拦截已关闭"
+        mobilesafe:deson="黑名单拦截已开启">
+
+    </tj.com.safe_project.view.SettingitemView>
 </LinearLayout>

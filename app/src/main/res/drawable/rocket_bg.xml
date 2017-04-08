@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animation-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--第一张图片，火焰较短-->
+    <item
+        android:drawable="@drawable/rocket_small"
+        android:duration="200" />
+    <!--第二张图片，火焰较长-->
+    <item
+        android:drawable="@drawable/rocket_big"
+        android:duration="200" />
+
+</animation-list>

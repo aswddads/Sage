@@ -17,16 +17,16 @@ public class BootReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
 //      1  获取开机后号码序列号
-      TelephonyManager tm= (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-        String serialNumber=tm.getSimSerialNumber();
+        TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+        String serialNumber = tm.getSimSerialNumber();
 //       2  sp中存储的序列卡号
-        String simNumber=SpUtils.getString(context, ConstanValue.SIM_NUMBER,"");
+        String simNumber = SpUtils.getString(context, ConstanValue.SIM_NUMBER, "");
 //        对比
-        if(!serialNumber.equals(simNumber)){
+        if (!serialNumber.equals(simNumber)) {
 //            发送给选中联系人
-            SmsManager smsManager=SmsManager.getDefault();
-            smsManager.sendTextMessage("",null,"sim change!!!",null,null);
-        }else{
+            SmsManager smsManager = SmsManager.getDefault();
+            smsManager.sendTextMessage("", null, "sim change!!!", null, null);
+        } else {
 
         }
     }
