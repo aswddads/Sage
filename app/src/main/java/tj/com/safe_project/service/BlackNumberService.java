@@ -32,7 +32,7 @@ public class BlackNumberService extends Service {
         IntentFilter intentFilter = new IntentFilter();
         smsReceiver = new InnerSmsReceiver();
         intentFilter.addAction("android.provider.Telephony.SMS_RECEIVED");
-        intentFilter.setPriority(2147483647);
+        intentFilter.setPriority(1000);
         registerReceiver(smsReceiver, intentFilter);
 //        监听电话的状态  电话管理者对象
         mTM = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
@@ -53,6 +53,8 @@ public class BlackNumberService extends Service {
                 case TelephonyManager.CALL_STATE_OFFHOOK://摘机，至少有一个电话活动
                     break;
                 case TelephonyManager.CALL_STATE_RINGING://响铃   挂断电话  aidl文件
+//                    2.2只需要mTM.endCall();
+//                    2.2以上需要ITelephony.aidl文件，因此没有深入研究  名为endCall()的方法
                     break;
             }
             super.onCallStateChanged(state, incomingNumber);
@@ -72,11 +74,15 @@ public class BlackNumberService extends Service {
 //                获取基本信息
                 String originatingAddress = message.getDisplayOriginatingAddress();
                 String messageBody = message.getMessageBody();
+                /**
+                 * 若要写拦截电话的逻辑  需要将mBlackNumberDao在onCreate中创建
+                 */
                 mBlackNumberDao = BlackNumberDao.getInstance(context);
                 int mode = mBlackNumberDao.getMode(originatingAddress);
                 if (mode ==1||mode==3) {
 //                    拦截短信
                     ToastUtil.show(getApplicationContext(),"shabi");
+//                    android 在4.4版本以上做了特殊处理，需要将本系统接收短信设置为系统级  因此没有进入深入研究
                     abortBroadcast();
                 }
             }
@@ -93,6 +99,10 @@ public class BlackNumberService extends Service {
     public void onDestroy() {
         if (smsReceiver != null) {
             unregisterReceiver(smsReceiver);
+        }
+//        取消对电话状态的监听
+        if (mPhoneStateListener!=null){
+            mTM.listen(mPhoneStateListener,PhoneStateListener.LISTEN_NONE);
         }
         super.onDestroy();
     }
