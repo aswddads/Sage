@@ -35,4 +35,12 @@ public class ConstanValue {
      * 是否开启小火箭的key
      */
     public static final String OPEN_ROCKET = "open_rocket";
+    /**
+     * 是否显示系统进程的key
+     */
+    public static final String SHOW_SYSTEM ="show_system" ;
+    /**
+     * 是否开启快捷方式的key
+     */
+    public static final String HAS_SORCUT ="has_sorcut" ;
 }

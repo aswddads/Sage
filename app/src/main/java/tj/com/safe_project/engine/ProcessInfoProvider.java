@@ -149,4 +149,36 @@ public class ProcessInfoProvider {
         }
         return processInfoList;
     }
+
+    /**
+     *  杀死进程的方法
+     * @param ctx  上下文
+     * @param processInfo    杀死进程的javaBeam对象
+     */
+    public static void killProcess(Context ctx,ProcessInfo processInfo) {
+//        获取activityManager管理者对象
+        ActivityManager am= (ActivityManager) ctx.getSystemService(Context.ACTIVITY_SERVICE);
+//        杀死指定包名的进程(权限)
+        am.killBackgroundProcesses(processInfo.packageName);
+    }
+
+    /**
+     *   杀死去全部进程
+     * @param ctx  上下文环境
+     */
+    public static void killAll(Context ctx) {
+        //        获取activityManager
+        ActivityManager am= (ActivityManager) ctx.getSystemService(Context.ACTIVITY_SERVICE);
+        //        获取正在运行进程的集合
+        List<ActivityManager.RunningAppProcessInfo> runningAppProcess=am.getRunningAppProcesses();
+//        循环进程，杀死
+        for (ActivityManager.RunningAppProcessInfo info:runningAppProcess) {
+//            除了自身进程
+            if (info.processName.equals(ctx.getPackageName())){
+                continue;
+            }else{
+                am.killBackgroundProcesses(info.processName);
+            }
+        }
+    }
 }

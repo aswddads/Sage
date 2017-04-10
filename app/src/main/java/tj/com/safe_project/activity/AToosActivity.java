@@ -13,6 +13,7 @@ import java.io.File;
 
 import tj.com.safe_project.R;
 import tj.com.safe_project.engine.SmsBackUp;
+import tj.com.safe_project.utils.ToastUtil;
 
 /**
  * Created by Jun on 17/4/3.
@@ -21,6 +22,7 @@ public class AToosActivity extends Activity{
     private TextView tv_num_address;
     private TextView tv_sms_backup;
     private ProgressBar pb_bar;
+    private TextView tv_commonnumber_query;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +32,31 @@ public class AToosActivity extends Activity{
 //        归属地查询
         initPhoneAddress();
         initSmsBackUp();//短信备份
+//        常用号码查询
+        initCommonNumberQuery();
+        initAppLock();
 
+    }
+
+    private void initAppLock() {
+        TextView tv_lock= (TextView) findViewById(R.id.tv_lock);
+        tv_lock.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+//                startActivity(new Intent(getApplicationContext(),AppLock));
+                ToastUtil.show(getApplicationContext(),"未实现");
+            }
+        });
+    }
+
+    private void initCommonNumberQuery() {
+        tv_commonnumber_query = (TextView) findViewById(R.id.tv_commonnumber_query);
+        tv_commonnumber_query.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getApplicationContext(),CommonNumberQueryActivity.class));
+            }
+        });
     }
 
     private void initSmsBackUp() {

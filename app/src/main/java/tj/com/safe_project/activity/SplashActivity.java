@@ -96,6 +96,28 @@ public class SplashActivity extends Activity {
         initAnimation();
 //        初始化数据库操作
         initDB();
+        if (!SpUtils.getBoolean(this,ConstanValue.HAS_SORCUT,false)){
+//        生成快捷方式
+            initShortCut();
+        }
+    }
+
+    /**
+     * 生成快捷方式
+     */
+    private void initShortCut() {
+//     给intent维护图标、名称
+
+        Intent intent=new Intent("com.android.launcher.action.INSTALL_SHORTCUT");
+        intent.putExtra(Intent.EXTRA_SHORTCUT_ICON, R.drawable.ic_launcher);
+        intent.putExtra(Intent.EXTRA_SHORTCUT_NAME,"手机卫士");
+        Intent shortCutIntent=new Intent("android.intent.action.HOME");
+        shortCutIntent.addCategory("android.intent.category.DEFAULT");
+        intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT,shortCutIntent);
+//        发送广播
+        sendBroadcast(intent);
+//        告知已经生成快捷方式
+        SpUtils.putBoolean(this,ConstanValue.HAS_SORCUT,true);
     }
 
     //添加淡入淡出动画效果
@@ -365,6 +387,8 @@ public class SplashActivity extends Activity {
     private void initDB() {
 //     电话数据库拷贝
         initAddressDB("address.db");
+//        常用号码数据库的拷贝过程
+        initAddressDB("commonnum.db");
     }
 
     /**

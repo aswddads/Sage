@@ -49,6 +49,8 @@ public class AppManagerActivity extends Activity {
     private List<AppInfo> mCustomerList;
     private TextView tv_des;
     private AppInfo mAppInfo;
+    private PopupWindow popupWindow;
+
 
     private Handler mHandler = new Handler() {
         @Override
@@ -60,8 +62,6 @@ public class AppManagerActivity extends Activity {
             }
         }
     };
-    private PopupWindow popupWindow;
-
     class MyAdapter extends BaseAdapter {
         //        获取适配器中条目类型总数  修改成两种（纯文本、图片＋文本）
         @Override
@@ -282,7 +282,9 @@ public class AppManagerActivity extends Activity {
 
         popupWindow = new PopupWindow(popupView, LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT, true);
+//        设置一个透明背景，为了响应回退
         popupWindow.setBackgroundDrawable(new ColorDrawable());
+//        指定窗体位置   view  即为点中条目的对象
         popupWindow.showAsDropDown(view, 200, -view.getHeight());
 
         popupView.startAnimation(animationSet);
