@@ -17,6 +17,11 @@
                 android:background="@drawable/ic_scanner_malware"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
+            <ImageView
+                android:id="@+id/iv_scanning"
+                android:background="@drawable/iv_scanning"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
         </RelativeLayout>
         <LinearLayout
             android:gravity="center"
@@ -24,21 +29,36 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
             <TextView
+                android:textSize="16sp"
+                android:textColor="@color/color_black"
                 android:text="正在扫描"
                 android:id="@+id/tv_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
-             <!--自定义进度条图片-->
+             <!--自定义进度条图片   三种状态-->
             <ProgressBar
-                android:progressDrawable=""
+                android:progressDrawable="@drawable/progress_bg"
                 style="@android:style/Widget.ProgressBar.Horizontal"
                 android:id="@+id/pd_bar"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="40dp" />
+
+        </LinearLayout>
+    </LinearLayout>
+    <!--只能有一个子节点-->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <!--包含多个节点，满足scrollview的缺点-->
+        <LinearLayout
+            android:orientation="vertical"
+            android:id="@+id/ll_add_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
 
         </LinearLayout>
 
-    </LinearLayout>
+    </ScrollView>
 
 
 </LinearLayout>

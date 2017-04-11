@@ -389,6 +389,10 @@ public class SplashActivity extends Activity {
         initAddressDB("address.db");
 //        常用号码数据库的拷贝过程
         initAddressDB("commonnum.db");
+//拷贝病毒数据库
+        initAddressDB("antivirus.db");
+
+
     }
 
     /**

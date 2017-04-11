@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--进度条为0%，0%－100%之间，100%的时候，使用的图片-->
+    <!--0%-->
+    <item
+        android:id="@android:id/background"
+        android:drawable="@drawable/gray_bg" />
+    <!--0%-100%-->
+    <item
+        android:id="@android:id/secondaryProgress"
+        android:drawable="@drawable/blue_bg" />
+    <!--100%-->
+    <item
+        android:id="@android:id/progress"
+        android:drawable="@drawable/blue_bg" />
+
+
+</layer-list>
