@@ -71,13 +71,18 @@ public class HomeActivity extends Activity {
 //                        跳转到进程管理界面
                         startActivity(new Intent(getApplicationContext(),ProcessManagerActivity.class));
                         break;
+                    case 4:
+//                        跳转到进程管理界面
+                        startActivity(new Intent(getApplicationContext(),TrafficActivity.class));
+                        break;
                     case 5:
 //                        跳转到杀毒界面
                         startActivity(new Intent(getApplicationContext(),AnitVirusActivity.class));
                         break;
                     case 6:
 //                        跳转到杀毒界面
-                        startActivity(new Intent(getApplicationContext(),CacheClearActivity.class));
+//                        startActivity(new Intent(getApplicationContext(),CacheClearActivity.class));
+                        startActivity(new Intent(getApplicationContext(),BaseCacheClearActivity.class));
                         break;
                     case 7://跳转到高级工具的页面
                         startActivity(new Intent(getApplicationContext(),AToosActivity.class));

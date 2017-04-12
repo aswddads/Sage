@@ -33,7 +33,8 @@ public class AppInfoProvider {
             appInfo.packageNmae = packageInfo.packageName;
 //            应用名称
             ApplicationInfo applicationInfo = packageInfo.applicationInfo;
-            appInfo.name = applicationInfo.loadLabel(pm).toString();
+//            applicationInfo.uid  每一个应用的唯一标识
+            appInfo.name = applicationInfo.loadLabel(pm).toString()+applicationInfo.uid;
 //            获取图标
             appInfo.icon=applicationInfo.loadIcon(pm);
 //          判断是否为系统应用（每个手机的flag值不同）

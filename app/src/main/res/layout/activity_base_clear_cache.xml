@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--放置选项卡和指向选项卡界面的控件-->
+<TabHost xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@android:id/tabhost"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <!--选项卡指向内容页所在布局-->
+    <FrameLayout
+        android:layout_marginBottom="50dp"
+        android:id="@android:id/tabcontent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </FrameLayout>
+    <!--选项卡布局-->
+    <TabWidget
+        android:id="@android:id/tabs"
+        android:layout_gravity="bottom"
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+    </TabWidget>
+
+</TabHost>
